@@ -2,5 +2,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.create, name='create')
+    path('add/', views.create, { 'is_add': True })
 ]

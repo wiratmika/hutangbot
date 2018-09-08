@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Debt
 
-def create(request, type):
+def create(request, is_add):
     try:
         payload = parse(request.POST['text'])
     except ValueError as err:
