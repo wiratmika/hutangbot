@@ -9,3 +9,6 @@ class Debt(models.Model):
     amount = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.source + ' owes ' + self.target + ' ' + str(self.amount)
