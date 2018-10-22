@@ -1,6 +1,7 @@
-from django.urls import path
-from . import views
+from django.conf.urls import url
+
+from debts import views
 
 urlpatterns = [
-    path('add/', views.create, { 'is_add': True })
+    url(r'^add/$', views.DebtList.as_view(), {'is_add': True})
 ]
