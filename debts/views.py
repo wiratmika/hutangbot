@@ -56,7 +56,8 @@ class DebtList(APIView):
                 'fields': [
                     {
                         'title': 'ID Transaksi',
-                        'value': transaction_id
+                        'value': transaction_id,
+                        'short': True
                     },
                     {
                         'title': 'Nilai',
@@ -75,7 +76,7 @@ class DebtList(APIView):
                     },
                     {
                         'title': 'Keterangan',
-                        'value': ''
+                        'value': instruction
                     }
                 ],
                 'color': 'good'
