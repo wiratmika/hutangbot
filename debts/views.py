@@ -26,7 +26,7 @@ class DebtList(APIView):
                     ],
                     'color': 'bad'
                 }]
-            }, status=status.HTTP_400_BAD_REQUEST)
+            }, status=status.HTTP_200_OK)
 
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
