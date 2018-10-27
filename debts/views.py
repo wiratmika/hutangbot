@@ -17,17 +17,24 @@ class DebtList(APIView):
         except ValueError as err:
             return Response({
                 'response_type': 'ephemeral',
-                'text': 'Gagal menambahkan hutang',
                 'attachments': [{
-                    'text': str(err)
+                    'text': 'Gagal menambahkan hutang',
+                    'fields': [
+                        {
+                            'text': 'Penyebab',
+                            'value': str(err),
+                        }
+                    ],
+                    'color': 'bad'
                 }]
             }, status=status.HTTP_400_BAD_REQUEST)
 
         sha1 = hashlib.sha1()
         sha1.update(str(time.time()).encode('utf-8'))
+        transaction_id = sha1.hexdigest()[:5]
 
         debt = Debt.objects.create(
-            transaction_id=sha1.hexdigest()[:5],
+            transaction_id=transaction_id,
             source=request.POST['user_name'],
             source_slack_id=request.POST['user_id'],
             target=payload['user_name'],
@@ -35,11 +42,43 @@ class DebtList(APIView):
             amount=payload['amount']
         )
 
+        # TODO: Make it a function
+        instruction = (
+            "Untuk membayar, ketik `/bayar @asd 5000` atau `/bayar 2df4ge`\n"
+            "Untuk melihat semua hutang/piutang yang kamu punya, kirim `/listhutang`\n"
+            "Untuk melihat semua daftar transaksi, kirim `/listtransaksi`"
+        )
+
         return Response({
             'response_type': 'ephemeral',
-            'text': 'Berhasil menambahkan hutang',
             'attachments': [{
-                'text': 'Kamu berhutang sejumlah ' + beautify_amount(debt.amount) + ' ke ' + debt.target
+                'text': 'Berhasil menambahkan hutang!',
+                'fields': [
+                    {
+                        'title': 'ID Transaksi',
+                        'value': transaction_id
+                    },
+                    {
+                        'title': 'Nilai',
+                        'value': beautify_amount(debt.amount),
+                        'short': True
+                    },
+                    {
+                        'title': 'Ke',
+                        'value': debt.target,
+                        'short': True
+                    },
+                    {
+                        'title': 'Jumlah Hutang',
+                        'value': 'Please implement',
+                        'short': True
+                    },
+                    {
+                        'title': 'Keterangan',
+                        'value': ''
+                    }
+                ],
+                'color': 'good'
             }]
         }, status=status.HTTP_201_CREATED)
 
@@ -49,6 +88,7 @@ class DebtList(APIView):
             raise ValueError(
                 'Jumlah parameter terlalu panjang atau terlalu pendek')
 
+        # TODO: validate user
         user = content[0]
         amount = int(content[1])
 
