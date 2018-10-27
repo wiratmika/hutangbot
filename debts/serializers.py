@@ -31,10 +31,10 @@ class DebtSerializer(serializers.BaseSerializer):
 
     def to_representation(self, obj):
         instruction = (
-            f"Untuk membatalkan, kirim `/hapus {obj.transaction_id}`\n"
-            f"Untuk membayar, ketik `/bayar @{obj.target} {obj.amount}` atau `/bayar {obj.transaction_id}`\n"
-            "Untuk melihat semua hutang/piutang yang kamu punya, kirim `/listhutang`\n"
-            "Untuk melihat semua daftar transaksi, kirim `/listtransaksi`"
+            f'Untuk membatalkan, kirim `/hapus {obj.transaction_id}`\n'
+            f'Untuk membayar, ketik `/bayar @{obj.target} {obj.amount}` atau `/bayar {obj.transaction_id}`\n'
+            'Untuk melihat semua hutang/piutang yang kamu punya, kirim `/listhutang`\n'
+            'Untuk melihat semua daftar transaksi, kirim `/listtransaksi`'
         )
 
         return {
