@@ -32,19 +32,22 @@ class DebtList(APIView):
         sha1 = hashlib.sha1()
         sha1.update(str(time.time()).encode('utf-8'))
         transaction_id = sha1.hexdigest()[:5]
+        user_name = payload['user_name']
+        amount = payload['amount']
 
         debt = Debt.objects.create(
             transaction_id=transaction_id,
             source=request.POST['user_name'],
             source_slack_id=request.POST['user_id'],
-            target=payload['user_name'],
+            target=user_name,
             target_slack_id=payload['user_id'],
-            amount=payload['amount']
+            amount=amount
         )
 
         # TODO: Make it a function
         instruction = (
-            "Untuk membayar, ketik `/bayar @asd 5000` atau `/bayar 2df4ge`\n"
+            f"Untuk membatalkan, kirim `/hapus {transaction_id}`\n"
+            f"Untuk membayar, ketik `/bayar @{user_name} {amount}` atau `/bayar {transaction_id}`\n"
             "Untuk melihat semua hutang/piutang yang kamu punya, kirim `/listhutang`\n"
             "Untuk melihat semua daftar transaksi, kirim `/listtransaksi`"
         )
