@@ -10,19 +10,17 @@ class DebtSerializer(serializers.BaseSerializer):
     def to_internal_value(self, data):
         content = data.get('text').split(' ')
         if (len(content) is not 2):
-            raise serializers.ValidationError({
-                'text': 'Jumlah parameter terlalu panjang atau terlalu pendek'
-            })
+            raise serializers.ValidationError(
+                'Jumlah parameter terlalu panjang atau terlalu pendek')
 
         # TODO: validate user
         user = content[0]
-        # TODO: strip of all punctuations?
+        # TODO: check for any non-numeric char
         amount = int(content[1])
 
         if (amount <= 0):
-            raise serializers.ValidationError({
-                'text': 'Jumlah hutang tidak boleh negatif'
-            })
+            raise serializers.ValidationError(
+                'Jumlah hutang tidak boleh negatif')
 
         return {
             'transaction_id': generate_transaction_id(),

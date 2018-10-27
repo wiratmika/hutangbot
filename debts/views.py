@@ -22,7 +22,7 @@ class DebtList(APIView):
                     'fields': [
                         {
                             'text': 'Penyebab',
-                            'value': serializer.errors,
+                            'value': serializer.errors[0],
                         }
                     ],
                     'color': 'bad'
