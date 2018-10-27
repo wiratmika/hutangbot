@@ -3,5 +3,10 @@ from django.urls import path
 from debts import views
 
 urlpatterns = [
-    path('add/', views.add_debt),
+    path('', views.list),
+    path('add/', views.create_debt),
+    path('substract/', views.create_payment),
+    path('receive/', views.create_receivable),
+    path('delete/', views.delete),
+    path('total/', views.calculate),
 ]
