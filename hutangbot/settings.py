@@ -122,4 +122,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'debts.utils.slack_exception_handler'
+}
+
 django_heroku.settings(locals())
