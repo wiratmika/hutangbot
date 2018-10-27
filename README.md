@@ -1,6 +1,6 @@
 # Hutangbot
 
-Might be renamed in the future as Debtwise(r).
+Might be renamed in the future as Debtwise(r). Make debt wisely!
 
 ## Usage instruction
 
@@ -20,6 +20,12 @@ e.g.
 /bayar [user] [amount]
 e.g.
 /bayar @John Doe 69000
+
+or
+
+/bayar [transaction_id]
+e.g.
+/bayar c2d3r4
 ```
 
 ### Make a piutang (i.e. somone owe you)
@@ -47,5 +53,5 @@ e.g.
 ```
 /hapus [transaction ID]
 e.g.
-/hapus 9d2dw
+/hapus d92dw
 ```
