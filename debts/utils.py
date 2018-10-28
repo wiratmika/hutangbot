@@ -63,7 +63,7 @@ def generate_ledger(own_debts, other_debts):
 def generate_transaction_id():
     sha1 = hashlib.sha1()
     sha1.update(str(time.time()).encode('utf-8'))
-    return sha1.hexdigest()[:5]
+    return sha1.hexdigest()[:6]
 
 
 # TODO: implement validation if user is malformed

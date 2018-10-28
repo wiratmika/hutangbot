@@ -22,7 +22,7 @@ class DebtManager(models.Manager):
 class Debt(models.Model):
     objects = DebtManager()
 
-    transaction_id = models.CharField(max_length=5)
+    transaction_id = models.CharField(max_length=6, unique=True)
     source = models.CharField(max_length=100)
     source_slack_id = models.CharField(max_length=100)
     target = models.CharField(max_length=100)
