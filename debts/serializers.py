@@ -7,6 +7,7 @@ from debts.utils import beautify_amount, generate_transaction_id, parse_user
 
 class CommandSerializer(serializers.Serializer):
     command = serializers.CharField()
+    text = serializers.CharField(allow_blank=True)
     user_id = serializers.CharField()
     user_name = serializers.CharField()
 
@@ -77,7 +78,7 @@ class DebtSerializer(serializers.BaseSerializer):
                 'fields': [
                     {
                         'title': 'ID Transaksi',
-                        'value': obj.transaction_id,
+                        'value': f'#{obj.transaction_id}',
                         'short': True
                     },
                     {

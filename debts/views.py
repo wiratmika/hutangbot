@@ -59,8 +59,44 @@ def create_receivable(request):
 
 
 @api_view(['POST'])
+# TODO: handle if deleted then payment > debts!?
 def delete(request):
-    return Response(serializer.data)
+    serializer = CommandSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user_id = serializer.validated_data['user_id']
+    # TODO: Validate for hashtag
+    transaction_id = serializer.validated_data['text'][1:]
+
+    try:
+        debt = Debt.objects.get(source_slack_id=user_id,
+                                transaction_id=transaction_id)
+    except Debt.DoesNotExist:
+        raise serializers.ValidationError(
+            'Transaksi tidak ditemukan atau bukan dibuat oleh kamu')
+
+    debt.deleted_at = timezone.now()
+    debt.save()
+
+    return Response({
+        'response_type': 'ephemeral',
+        'attachments': [{
+            'text': 'Berhasil menghapus transaksi :tada:',
+            'fields': [
+                {
+                    'title': 'ID Transaksi',
+                    'value': serializer.validated_data['text'],
+                    'short': True
+                },
+                {
+                    'title': 'Jumlah/Sisa Hutang',
+                    'value': 'To be implemented',
+                    'short': True
+                }
+            ],
+            'color': 'good',
+            'ts': timezone.now().timestamp()
+        }]
+    })
 
 
 @api_view(['POST'])
