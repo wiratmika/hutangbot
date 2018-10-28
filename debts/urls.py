@@ -4,8 +4,8 @@ from debts import views
 
 urlpatterns = [
     path('', views.list),
-    path('add/', views.create_debt),
-    path('substract/', views.create_payment),
+    path('owe/', views.create_debt),
+    path('pay/', views.create_payment),
     path('receive/', views.create_receivable),
     path('delete/', views.delete),
     path('outstanding/', views.calculate),
