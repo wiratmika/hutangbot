@@ -66,7 +66,10 @@ class DebtSerializer(serializers.BaseSerializer):
                     },
                     {
                         'title': 'Jumlah Hutang',
-                        'value': 'Please implement',
+                        'value': beautify_amount(Debt.objects.get_total_for(
+                            obj.source_slack_id,
+                            obj.target_slack_id
+                        )),
                         'short': True
                     },
                     {

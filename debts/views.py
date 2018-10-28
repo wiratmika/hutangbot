@@ -43,8 +43,8 @@ def calculate(request):
 
     # TODO: optimize this to aggregate in DB instead
     # TODO: maybe can also use ViewSet
-    own_debts = Debt.objects.filter(source_slack_id=user_id, deleted_at=None)
-    other_debts = Debt.objects.filter(target_slack_id=user_id, deleted_at=None)
+    own_debts = Debt.objects.filter(source_slack_id=user_id)
+    other_debts = Debt.objects.filter(target_slack_id=user_id)
 
     result = TotalSerializer(
         data=generate_ledger(own_debts, other_debts),
