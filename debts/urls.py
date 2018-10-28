@@ -8,5 +8,5 @@ urlpatterns = [
     path('substract/', views.create_payment),
     path('receive/', views.create_receivable),
     path('delete/', views.delete),
-    path('total/', views.calculate),
+    path('outstanding/', views.calculate),
 ]
