@@ -4,10 +4,16 @@ import time
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.views import exception_handler
+from rest_framework.response import Response
 
 
 def slack_exception_handler(exc, context):
     response = exception_handler(exc, context)
+
+    # Not DRF validation error
+    if not isinstance(response, Response):
+        return response
+
     response.status_code = status.HTTP_200_OK
     response.data = {
         'response_type': 'ephemeral',
