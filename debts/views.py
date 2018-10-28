@@ -1,4 +1,5 @@
 from django.utils import timezone
+from rest_framework import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -14,7 +15,7 @@ def list(request):
 
 @api_view(['POST'])
 def create_debt(request):
-    serializer = DebtSerializer(data=request.data)
+    serializer = DebtSerializer(data=request.data, context={'is_add': True})
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data)
@@ -22,7 +23,9 @@ def create_debt(request):
 
 @api_view(['POST'])
 def create_payment(request):
-    return Response()
+    serializer = DebtSerializer(data=request.data, context={'is_add': False})
+    serializer.is_valid(raise_exception=True)
+    return Response(total)
 
 
 @api_view(['POST'])

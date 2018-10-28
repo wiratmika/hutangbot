@@ -13,7 +13,7 @@ class CommandSerializer(serializers.Serializer):
 
 class DebtSerializer(serializers.BaseSerializer):
     def to_internal_value(self, data):
-        content = data.get('text').split(' ')
+        content = data['text'].split(' ')
         if (len(content) is not 2):
             raise serializers.ValidationError(
                 'Jumlah parameter terlalu panjang atau terlalu pendek')
@@ -23,17 +23,29 @@ class DebtSerializer(serializers.BaseSerializer):
         # TODO: check for any non-numeric char
         amount = int(content[1])
 
-        if (amount <= 0):
+        if amount <= 0:
             raise serializers.ValidationError(
-                'Jumlah hutang tidak boleh negatif')
+                'Jumlah hutang atau pembayaran tidak boleh negatif')
+
+        source_slack_id = data.get('user_id')
+        target = user[user.index('|') + 1:-1]
+        target_slack_id = user[2:user.index('|')]
+
+        if not self.context['is_add']:
+            past_debt = Debt.objects.get_total_for(
+                source_slack_id, target_slack_id)
+
+            if amount > past_debt:
+                raise serializers.ValidationError(
+                    f'Kamu hanya berhutang sejumlah {past_debt} ke {target}')
 
         return {
             'transaction_id': generate_transaction_id(),
-            'source': data.get('user_name'),
-            'source_slack_id': data.get('user_id'),
-            'target': user[user.index('|') + 1:-1],
-            'target_slack_id': user[2:user.index('|')],
-            'amount': amount
+            'source': data['user_name'],
+            'source_slack_id': source_slack_id,
+            'target': target,
+            'target_slack_id': target_slack_id,
+            'amount': amount if self.context['is_add'] else -amount
         }
 
     def to_representation(self, obj):

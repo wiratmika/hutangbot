@@ -37,6 +37,7 @@ def beautify_amount(amount):
     return 'Rp ' + '{:,}'.format(int(amount))
 
 
+# TODO: handle when empty
 def generate_ledger(own_debts, other_debts):
     ledger = {}
 
