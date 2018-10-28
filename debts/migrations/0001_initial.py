@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='Debt',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('transaction_id', models.CharField(max_length=5)),
+                ('transaction_id', models.CharField(max_length=6, unique=True)),
                 ('source', models.CharField(max_length=100)),
                 ('source_slack_id', models.CharField(max_length=100)),
                 ('target', models.CharField(max_length=100)),
