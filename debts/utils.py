@@ -37,6 +37,28 @@ def beautify_amount(amount):
     return 'Rp ' + '{:,}'.format(int(amount))
 
 
+def generate_ledger(own_debts, other_debts):
+    ledger = {}
+
+    for debt in own_debts:
+        info = ledger.get(debt.target_slack_id, {
+            'name': debt.target,
+            'amount': 0
+        })
+        info['amount'] += debt.amount
+        ledger[debt.target_slack_id] = info
+
+    for debt in other_debts:
+        info = ledger.get(debt.target_slack_id, {
+            'name': debt.target,
+            'amount': 0
+        })
+        info['amount'] -= debt.amount
+        ledger[debt.target_slack_id] = info
+
+    return ledger.values()
+
+
 def generate_transaction_id():
     sha1 = hashlib.sha1()
     sha1.update(str(time.time()).encode('utf-8'))

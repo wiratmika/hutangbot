@@ -81,3 +81,14 @@ class DebtSerializer(serializers.BaseSerializer):
 
     def create(self, validated_data):
         return Debt.objects.create(**validated_data)
+
+
+class TotalSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        if obj['amount'] == 0:
+            return f"Kamu sudah impas dengan {obj['name']}. Selamat!"
+
+        if obj['amount'] > 0:
+            return f"Kamu masih berhutang ke {obj['name']} sebesar {beautify_amount(obj['amount'])}"
+        else:
+            return f"{obj['name']} masih berhutang ke kamu sebesar {beautify_amount(obj['amount'])}"
