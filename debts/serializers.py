@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from debts.models import Debt
@@ -67,7 +68,8 @@ class DebtSerializer(serializers.BaseSerializer):
                         'value': instruction
                     }
                 ],
-                'color': 'good'
+                'color': 'good',
+                'ts': timezone.now().timestamp()
             }]
         }
 

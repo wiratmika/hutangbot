@@ -1,6 +1,7 @@
 import hashlib
 import time
 
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.views import exception_handler
 
@@ -18,7 +19,8 @@ def slack_exception_handler(exc, context):
                     'value': response.data[0],
                 }
             ],
-            'color': 'danger'
+            'color': 'danger',
+            'ts': timezone.now().timestamp()
         }]
     }
 
