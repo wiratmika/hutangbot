@@ -64,3 +64,11 @@ def generate_transaction_id():
     sha1 = hashlib.sha1()
     sha1.update(str(time.time()).encode('utf-8'))
     return sha1.hexdigest()[:5]
+
+
+# TODO: implement validation if user is malformed
+def parse_user(user):
+    return {
+        'name': user[user.index('|') + 1:-1],
+        'slack_id': user[2:user.index('|')]
+    }
