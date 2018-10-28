@@ -5,6 +5,12 @@ from debts.models import Debt
 from debts.utils import beautify_amount, generate_transaction_id
 
 
+class CommandSerializer(serializers.Serializer):
+    command = serializers.CharField()
+    user_id = serializers.CharField()
+    user_name = serializers.CharField()
+
+
 class DebtSerializer(serializers.BaseSerializer):
     def to_internal_value(self, data):
         content = data.get('text').split(' ')
