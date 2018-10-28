@@ -117,7 +117,7 @@ class TotalSerializer(serializers.BaseSerializer):
         if obj['amount'] > 0:
             return f'Kamu masih berhutang ke {obj["name"]} sebesar {beautify_amount(obj["amount"])}'
 
-        return f'{obj["name"]} masih berhutang ke kamu sebesar {beautify_amount(obj["amount"])}'
+        return f'{obj["name"]} masih berhutang ke kamu sebesar {beautify_amount(abs(obj["amount"]))}'
 
 
 # TODO: is it possible to user serializers.ListSerializer?

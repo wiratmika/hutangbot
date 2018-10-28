@@ -45,9 +45,9 @@ e.g.
 ### Delete a transaction (in case you made a mistake)
 
 ```
-/hapus [transaction ID]
+/hapus #[transaction ID]
 e.g.
-/hapus d92dw
+/hapus #d92dw
 ```
 
 ## Future development
