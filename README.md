@@ -39,13 +39,13 @@ e.g.
 ### See net list of your debt (who and how much you owe, and vice versa)
 
 ```
-/listhutang
+/hutangku
 ```
 
 ### See list of all of your transactions (including those made by others)
 
 ```
-/listtransaksi
+/transaksiku
 ```
 
 ### Delete a transaction (in case you made a mistake)
@@ -58,4 +58,5 @@ e.g.
 
 ## Future development
 
+- Add index
 - Webhook to notify the other user
