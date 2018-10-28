@@ -20,12 +20,6 @@ e.g.
 /bayar [user] [amount]
 e.g.
 /bayar @John Doe 69000
-
-or
-
-/bayar [transaction_id]
-e.g.
-/bayar c2d3r4
 ```
 
 ### Make a piutang (i.e. somone owe you)
@@ -60,3 +54,11 @@ e.g.
 
 - Add index
 - Webhook to notify the other user
+
+```
+# atau `/bayar {obj.transaction_id}`
+
+/bayar [transaction_id]
+e.g.
+/bayar c2d3r4
+```
