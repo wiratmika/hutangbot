@@ -22,7 +22,7 @@ e.g.
 /bayar @John Doe 69000
 ```
 
-### Make a piutang (i.e. somone owe you)
+### Make a piutang (i.e. somone owe you) [in development]
 
 ```
 /piutang [user] [amount]

@@ -1,16 +1,40 @@
+from django.db.models import Q
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from debts.models import Debt
-from debts.serializers import CommandSerializer, DebtSerializer, TotalSerializer
+from debts.serializers import CommandSerializer, DebtSerializer, ListSerializer, TotalSerializer
 from debts.utils import generate_ledger
 
 
 @api_view(['POST'])
 def list(request):
-    return Response()
+    serializer = CommandSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user_id = serializer.validated_data['user_id']
+
+    debts = Debt.objects.filter(
+        Q(source_slack_id=user_id) | Q(target_slack_id=user_id))
+    result = ListSerializer(
+        data=debts,
+        many=True,
+        context={'user_id': user_id}
+    )
+    result.is_valid()
+
+    return Response({
+        'response_type': 'ephemeral',
+        'attachments': [{
+            'fields': [{
+                'title': 'Berikut daftar transaksi kamu',
+                'value': '\n'.join(result.data)
+            }],
+            'color': 'good',
+            'ts': timezone.now().timestamp()
+        }]
+    })
 
 
 @api_view(['POST'])
@@ -40,6 +64,7 @@ def delete(request):
 
 
 @api_view(['POST'])
+# TODO: might as well merge with list function, just different command
 def calculate(request):
     serializer = CommandSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -60,7 +85,7 @@ def calculate(request):
         'response_type': 'ephemeral',
         'attachments': [{
             'fields': [{
-                'title': 'Berikut list hutang kamu',
+                'title': 'Berikut daftar hutang kamu',
                 'value': '\n'.join(result.data)
             }],
             'color': 'good',

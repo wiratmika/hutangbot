@@ -24,7 +24,7 @@ class DebtSerializer(serializers.BaseSerializer):
 
         if amount <= 0:
             raise serializers.ValidationError(
-                'Jumlah hutang atau pembayaran tidak boleh negatif')
+                'Jumlah hutang atau pembayaran tidak boleh nol atau negatif')
 
         source_slack_id = data.get('user_id')
 
@@ -82,7 +82,7 @@ class DebtSerializer(serializers.BaseSerializer):
                     },
                     {
                         'title': 'Nilai',
-                        'value': beautify_amount(amount if is_add else -amount),
+                        'value': beautify_amount(obj.amount if is_add else -obj.amount),
                         'short': True
                     },
                     {
@@ -112,9 +112,22 @@ class DebtSerializer(serializers.BaseSerializer):
 class TotalSerializer(serializers.BaseSerializer):
     def to_representation(self, obj):
         if obj['amount'] == 0:
-            return f"Kamu sudah impas dengan {obj['name']}. Selamat!"
+            return f'Kamu sudah impas dengan {obj["name"]}. Selamat!'
 
         if obj['amount'] > 0:
-            return f"Kamu masih berhutang ke {obj['name']} sebesar {beautify_amount(obj['amount'])}"
-        else:
-            return f"{obj['name']} masih berhutang ke kamu sebesar {beautify_amount(obj['amount'])}"
+            return f'Kamu masih berhutang ke {obj["name"]} sebesar {beautify_amount(obj["amount"])}'
+
+        return f'{obj["name"]} masih berhutang ke kamu sebesar {beautify_amount(obj["amount"])}'
+
+
+# TODO: is it possible to user serializers.ListSerializer?
+class ListSerializer(serializers.BaseSerializer):
+    def to_representation(self, obj):
+        action = 'berhutang' if obj.amount > 0 else 'membayar'
+        amount = abs(obj.amount)
+        prefix = f'[#{obj.transaction_id} - {obj.created_at.strftime("%Y-%m-%d %H:%M:%S")}]'
+
+        if obj.source_slack_id == self.context['user_id']:
+            return f'{prefix} Kamu {action} ke {obj.target} sejumlah {beautify_amount(amount)}'
+
+        return f'{prefix} {obj.target} {action} ke kamu sejumlah {beautify_amount(amount)}'
