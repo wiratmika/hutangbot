@@ -18,7 +18,7 @@ def slack_exception_handler(exc, context):
     response.data = {
         'response_type': 'ephemeral',
         'attachments': [{
-            'text': 'Gagal menambahkan hutang',
+            'text': 'Gagal menambahkan hutang atau pembayaran :cry:',
             'fields': [
                 {
                     'title': 'Penyebab',

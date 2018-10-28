@@ -32,9 +32,13 @@ class DebtSerializer(serializers.BaseSerializer):
             past_debt = Debt.objects.get_total_for(
                 source_slack_id, target['slack_id'])
 
+            if past_debt == 0:
+                raise serializers.ValidationError(
+                    f'Kamu tidak memiliki hutang ke {target["name"]}')
+
             if amount > past_debt:
                 raise serializers.ValidationError(
-                    f'Kamu hanya berhutang sejumlah {past_debt} ke {target["name"]}')
+                    f'Kamu hanya berhutang sejumlah {beautify_amount(past_debt)} ke {target["name"]}')
 
         return {
             'transaction_id': generate_transaction_id(),
@@ -46,17 +50,30 @@ class DebtSerializer(serializers.BaseSerializer):
         }
 
     def to_representation(self, obj):
+        is_add = self.context['is_add']
+        # TODO delete pay instruction when is_add=False
         instruction = (
             f'Untuk membatalkan, kirim `/hapus {obj.transaction_id}`\n'
-            f'Untuk membayar, ketik `/bayar @{obj.target} {obj.amount}` atau `/bayar {obj.transaction_id}`\n'
-            'Untuk melihat semua hutang/piutang yang kamu punya, kirim `/listhutang`\n'
-            'Untuk melihat semua daftar transaksi, kirim `/listtransaksi`'
+            f'Untuk membayar, ketik `/bayar @{obj.target} {obj.amount}`\n'
+            'Untuk melihat semua hutang/piutang yang kamu punya, kirim `/hutangku`\n'
+            'Untuk melihat semua daftar transaksi, kirim `/transaksiku`'
         )
+
+        text = 'Berhasil menambahkan hutang :tada:' if is_add else 'Berhasil melakukan pembayaran! :tada:'
+        outstanding = Debt.objects.get_total_for(
+            obj.source_slack_id,
+            obj.target_slack_id
+        )
+
+        if not is_add and outstanding == 0:
+            remarks = f'Selamat, kamu telah melunasi seluruh hutangmu ke {obj.target}!'
+        else:
+            remarks = beautify_amount(outstanding)
 
         return {
             'response_type': 'ephemeral',
             'attachments': [{
-                'text': 'Berhasil menambahkan hutang!',
+                'text': text,
                 'fields': [
                     {
                         'title': 'ID Transaksi',
@@ -65,7 +82,7 @@ class DebtSerializer(serializers.BaseSerializer):
                     },
                     {
                         'title': 'Nilai',
-                        'value': beautify_amount(obj.amount),
+                        'value': beautify_amount(amount if is_add else -amount),
                         'short': True
                     },
                     {
@@ -74,11 +91,8 @@ class DebtSerializer(serializers.BaseSerializer):
                         'short': True
                     },
                     {
-                        'title': 'Jumlah Hutang',
-                        'value': beautify_amount(Debt.objects.get_total_for(
-                            obj.source_slack_id,
-                            obj.target_slack_id
-                        )),
+                        'title': 'Jumlah Hutang' if is_add else 'Sisa Hutang',
+                        'value': remarks,
                         'short': True
                     },
                     {

@@ -25,7 +25,8 @@ def create_debt(request):
 def create_payment(request):
     serializer = DebtSerializer(data=request.data, context={'is_add': False})
     serializer.is_valid(raise_exception=True)
-    return Response(total)
+    serializer.save()
+    return Response(serializer.data)
 
 
 @api_view(['POST'])
