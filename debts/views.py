@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from debts.models import Debt
+from debts.responses import GenericSuccessResponse
 from debts.serializers import CommandSerializer, DebtSerializer, ListSerializer, TotalSerializer
 from debts.utils import generate_ledger
 
@@ -25,14 +26,7 @@ def list(request):
     result.is_valid()
 
     if len(result.data) == 0:
-        return Response({
-            'response_type': 'ephemeral',
-            'attachments': [{
-                'text': 'Kamu belum memiliki transaksi. Pakai botnya, dong!',
-                'color': 'good',
-                'ts': timezone.now().timestamp()
-            }]
-        })
+        return Response(GenericSuccessResponse('Kamu belum memiliki transaksi. Pakai botnya, dong!'))
 
     return Response({
         'response_type': 'ephemeral',
@@ -128,14 +122,7 @@ def calculate(request):
     result.is_valid()
 
     if len(result.data) == 0:
-        return Response({
-            'response_type': 'ephemeral',
-            'attachments': [{
-                'text': 'Kamu tidak memiliki hutang piutang. Selamat menikmati hidup!',
-                'color': 'good',
-                'ts': timezone.now().timestamp()
-            }]
-        })
+        return Response(GenericSuccessResponse('Kamu tidak memiliki hutang piutang. Selamat menikmati hidup!'))
 
     return Response({
         'response_type': 'ephemeral',
