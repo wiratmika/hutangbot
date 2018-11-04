@@ -24,6 +24,16 @@ def list(request):
     )
     result.is_valid()
 
+    if len(result.data) == 0:
+        return Response({
+            'response_type': 'ephemeral',
+            'attachments': [{
+                'text': 'Kamu belum memiliki transaksi. Pakai botnya, dong!',
+                'color': 'good',
+                'ts': timezone.now().timestamp()
+            }]
+        })
+
     return Response({
         'response_type': 'ephemeral',
         'attachments': [{
@@ -116,6 +126,16 @@ def calculate(request):
         many=True
     )
     result.is_valid()
+
+    if len(result.data) == 0:
+        return Response({
+            'response_type': 'ephemeral',
+            'attachments': [{
+                'text': 'Kamu tidak memiliki hutang piutang. Selamat menikmati hidup!',
+                'color': 'good',
+                'ts': timezone.now().timestamp()
+            }]
+        })
 
     return Response({
         'response_type': 'ephemeral',
