@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from debts.models import Debt
-from debts.responses import GenericSuccessResponse
+from debts.responses import AttachmentSuccessResponse, GenericSuccessResponse
 from debts.serializers import CommandSerializer, DebtSerializer, ListSerializer, TotalSerializer
 from debts.utils import generate_ledger
 
@@ -28,17 +28,7 @@ def list(request):
     if len(result.data) == 0:
         return Response(GenericSuccessResponse('Kamu belum memiliki transaksi. Pakai botnya, dong!'))
 
-    return Response({
-        'response_type': 'ephemeral',
-        'attachments': [{
-            'fields': [{
-                'title': 'Berikut daftar transaksi kamu',
-                'value': '\n'.join(result.data)
-            }],
-            'color': 'good',
-            'ts': timezone.now().timestamp()
-        }]
-    })
+    return Response(AttachmentSuccessResponse(content_tuples=[('Berikut daftar transaksi kamu', '\n'.join(result.data), False)]))
 
 
 @api_view(['POST'])
@@ -124,14 +114,4 @@ def calculate(request):
     if len(result.data) == 0:
         return Response(GenericSuccessResponse('Kamu tidak memiliki hutang piutang. Selamat menikmati hidup!'))
 
-    return Response({
-        'response_type': 'ephemeral',
-        'attachments': [{
-            'fields': [{
-                'title': 'Berikut daftar hutang kamu',
-                'value': '\n'.join(result.data)
-            }],
-            'color': 'good',
-            'ts': timezone.now().timestamp()
-        }]
-    })
+    return Response(AttachmentSuccessResponse(content_tuples=[('Berikut daftar hutang kamu', '\n'.join(result.data), False)]))

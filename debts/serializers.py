@@ -126,7 +126,7 @@ class ListSerializer(serializers.BaseSerializer):
     def to_representation(self, obj):
         action = 'berhutang' if obj.amount > 0 else 'membayar'
         amount = abs(obj.amount)
-        prefix = f'[#{obj.transaction_id} - {obj.created_at.strftime("%Y-%m-%d %H:%M:%S")}]'
+        prefix = f'[`#{obj.transaction_id}` {obj.created_at.strftime("%Y-%m-%d %H:%M:%S")}]'
 
         if obj.source_slack_id == self.context['user_id']:
             return f'{prefix} Kamu {action} ke {obj.target} sejumlah {beautify_amount(amount)}'
