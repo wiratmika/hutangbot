@@ -121,7 +121,7 @@ class TotalSerializer(serializers.BaseSerializer):
         return f'{obj["name"]} masih berhutang ke kamu sebesar {beautify_amount(abs(obj["amount"]))}'
 
 
-# TODO: is it possible to user serializers.ListSerializer?
+# TODO: is it possible to use serializers.ListSerializer?
 class ListSerializer(serializers.BaseSerializer):
     def to_representation(self, obj):
         action = 'berhutang' if obj.amount > 0 else 'membayar'
